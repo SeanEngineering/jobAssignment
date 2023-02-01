@@ -66,4 +66,17 @@ public class TempService {
 		return temps;
 		
 	}
+	
+	public Temp updateTemp(AssignManagerDTO data, long id) {
+		Optional<Temp> maybeTemp = getTempById(id);
+		Optional<Temp> maybeManager = getTempById(data.getManagerId());
+		if (maybeTemp.isPresent() && maybeManager.isPresent()) {
+			Temp setTemp = maybeTemp.get();
+			setTemp.setManager(maybeManager.get());
+			this.repository.save(setTemp);
+			return setTemp;
+			
+		}
+		return null;
+	}
 }

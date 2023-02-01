@@ -13,6 +13,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -30,10 +32,36 @@ public class Temp {
 	@Column
 	String lastName;
 	
+	public List<Temp> getManagedTemps() {
+		return managedTemps;
+	}
+
+	public void setManagedTemps(List<Temp> managedTemps) {
+		this.managedTemps = managedTemps;
+	}
+
+	public Temp getManager() {
+		return manager;
+	}
+
+	public void setManager(Temp manager) {
+		this.manager = manager;
+	}
+
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "temp", orphanRemoval = true)
 	@JsonIgnoreProperties({"temp"})
 	@Nullable
 	List<Job> jobs;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@Nullable
+	List<Temp> managedTemps;
+	
+	@ManyToOne
+	@Nullable
+	@JoinColumn(name = "manager_id")
+	Temp manager;
+	
 	
 	public Temp() {
 		
@@ -75,6 +103,8 @@ public class Temp {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.jobs = new ArrayList<>();
+		this.managedTemps = null;
+		this.manager = null;
 	}
 
 }
